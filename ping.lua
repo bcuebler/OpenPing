@@ -57,7 +57,7 @@ while true do
         print("\n--- Package is recived ---")
         print(string.format("Ping: %.2f ms", elapsedTime))
         
-        if tostring(receivedMessage) != sentMessage then
+        if not tostring(receivedMessage) == sentMessage then
             print("Package is corrupted!")
             print("Sended: " .. sentMessage)
             print("Recived:  " .. tostring(receivedMessage))
