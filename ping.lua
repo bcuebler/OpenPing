@@ -36,8 +36,7 @@ local function generateRandomString(length)
 end
 
 local sentMessage = generateRandomString(16)
-print("Küldendő teszt szöveg: " .. sentMessage)
-print("Csomag küldése...")
+print("Sending packet: " .. sentMessage)
 
 local startTime = computer.uptime()
 modem.broadcast(port, sentMessage)
