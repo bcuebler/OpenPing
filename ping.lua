@@ -12,13 +12,15 @@ term.clear()
 print("--- OpenPing V1.0 ---")
 print(" ")
 
--- Port bekérése
 io.write("Port?: ")
 local port = tonumber(io.read())
 
 if not port or port < 1 or port > 65535 then
     error("Wrong port!")
 end
+
+io.write("delay?: ")
+local delay = tonumber(io.read())
 
 modem.open(port)
 if not modem.isOpen(port) then
@@ -35,19 +37,25 @@ local function generateRandomString(length)
     return str
 end
 
+while true do
 local sentMessage = generateRandomString(16)
 print("Sending packet: " .. sentMessage)
 
 local startTime = computer.uptime()
 modem.broadcast(port, sentMessage)
 
-
-while true do
-    local evt, _, _, msgPort, _, receivedMessage = event.pull(5, "modem_message")
+done = true
+while done do
+    local evt, _, _, msgPort, _, receivedMessage = event.pullMultiple(5, "modem_message", "key_down")
+    
+    if evt == "key_down" then
+        modem.close(port)
+        return
+    end
     
     if not evt then
         print("Timeout")
-        break
+        done = false
     end
     
     if msgPort == port then
@@ -63,8 +71,17 @@ while true do
             print("Recived:  " .. tostring(receivedMessage))
         end
         
-        break 
+        done = false
     end
 end
 
+local delayStart = computer.uptime()
+while computer.uptime() - delayStart < delay do
+    local evt = event.pull(0.05, "key_down")
+    if evt == "key_down" then
+        modem.close(port)
+        return
+    end
+end   
+end
 modem.close(port)
