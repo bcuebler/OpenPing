@@ -1,7 +1,7 @@
 
 local PORT = 120
 
-local modem = component.proxy(component.list("modem")
+local modem = component.proxy(component.list("modem")())
     modem.open(PORT)
     while true do
       local signal = {computer.pullSignal()}
