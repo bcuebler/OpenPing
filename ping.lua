@@ -4,7 +4,8 @@ local event = require("event")
 local term = require("term")
 
 if not component.isAvailable("modem") then
-    error("This program requires network card!")
+    print("This program requires a network card to run.")
+    os.exit()
 end
 local modem = component.modem
 
